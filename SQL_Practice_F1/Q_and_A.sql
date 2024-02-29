@@ -55,7 +55,6 @@ FROM orders
 WHERE mod(order_id,2)=0;
 
 
-
 /* EASY
 Show the city, company_name, contact_name of all customers from cities which contains the letter 'L' in the city name, sorted by contact_name
 */
@@ -79,7 +78,6 @@ from customers
 where fax IS NOT NULL
 
 
-
 /* EASY
 Show the first_name, last_name. hire_date of the most recently hired employee.
 */
@@ -91,23 +89,55 @@ from employees
 
 
 /* EASY
-Show the first_name, last_name. hire_date of the most recently hired employee.
+Show the average unit price rounded to 2 decimal places, the total units in stock, total discontinued products from the products table.
 */
 select
-  first_name,
-  last_name,
-  MAX(hire_date)
-from employees
+  round(avg(unit_price), 2) AS Average_Price,
+  Sum(units_in_stock) AS Unit_Stock,
+  Sum(discontinued) AS Discount
+from products
 
 
-/* EASY
-
+/* MEDIUM
+Show the ProductName, CompanyName, CategoryName from the products, suppliers, and categories table
 */
+select
+  p.product_name,
+  s.company_name,
+  c.category_name
+from products AS p
+  join categories AS c ON c.category_id = p.category_id
+  join suppliers AS s ON s.supplier_id = p.supplier_id
 
 
+/* MEDIUM
+Show the category_name and the average product unit price for each category rounded to 2 decimal places.
+*/
+select
+  c.category_name AS Category_Name,
+  ROUND(avg(unit_price), 2) AS Average_Unit_Price
+FROM categories as c
+  join products AS p on c.category_id = p.category_id
+group by Category_Name
 
 
-
+/* MEDIUM
+Show the city, company_name, contact_name from the customers and suppliers table merged together.
+Create a column which contains 'customers' or 'suppliers' depending on the table it came from.
+*/
+select
+  city,
+  company_name,
+  contact_name,
+  'customers'
+from customers
+union
+select
+  city,
+  company_name,
+  contact_name,
+  'suppliers'
+from suppliers
 
 
 /* HARD
@@ -137,6 +167,17 @@ order by
   num_orders desc
 
 
-/*
-
+/* HARD
+Show how much money the company lost due to giving discounts each year, order the years from most recent to least recent. Round to 2 decimal places
 */
+select
+  year(o.order_date) AS Order_Year,
+  round(
+    SUm(p.unit_price * od.quantity * od.discount),
+    2
+  ) AS Discount_Ammount
+from orders AS o
+  join order_details AS od ON o.order_id = od.order_id
+  join products AS p ON p.product_id = od.product_id
+group by Order_Year
+order by Order_Year desc
