@@ -151,6 +151,168 @@ from patients
 where allergies IS NOT NULL and city = 'Hamilton'
 
 
+/* MEDIUM
+Show unique birth years from patients and order them by ascending.
+*/
+select
+  distinct(YEAR(birth_date)) AS Birth_Year
+FROM patients
+order by Birth_Year
+
+
+/* MEDIUM
+Show unique first names from the patients table which only occurs once in the list.
+For example, if two or more people are named 'John' in the first_name column then don't include their name in the output list. If only 1 person is named 'Leo' then include them in the output.
+*/
+select distinct(first_name) AS First_Name
+from patients
+group by First_Name
+having count(First_Name) = 1
+
+
+/* MEDIUM
+Show patient_id and first_name from patients where their first_name start and ends with 's' and is at least 6 characters long.
+*/
+select
+  patient_id,
+  first_name
+from patients
+where first_name LIKE 's__%__s'
+
+
+/* MEDIUM
+Show patient_id, first_name, last_name from patients whos diagnosis is 'Dementia'.
+Primary diagnosis is stored in the admissions table.
+*/
+select
+  p.patient_id,
+  p.first_name,
+  p.last_name
+from patients AS p
+  join admissions AS a ON p.patient_id = a.patient_id
+where a.diagnosis = 'Dementia'
+
+
+/* MEDIUM
+Display every patient's first_name.
+Order the list by the length of each name and then by alphabetically.
+*/
+select first_name
+from patients
+order by
+  LEN(first_name),
+  first_name
+
+
+/* MEDIUM
+Show the total amount of male patients and the total amount of female patients in the patients table.
+Display the two results in the same row.
+*/
+select (
+    select count(*)
+    from patients
+    where gender = 'M'
+  ) AS Male, (
+    select count(*)
+    from patients
+    where gender = 'F'
+  ) AS Female
+
+
+/* MEDIUM
+Show first and last name, allergies from patients which have allergies to either 'Penicillin' or 'Morphine'. Show results ordered ascending by allergies then by first_name then by last_name.
+*/
+SELECT
+  first_name,
+  last_name,
+  allergies
+from patients
+where
+  allergies IN ('Penicillin', 'Morphine')
+order by
+  allergies,
+  first_name,
+  last_name
+
+
+/* MEDIUM
+Show patient_id, diagnosis from admissions. Find patients admitted multiple times for the same diagnosis.
+*/
+SELECT
+  patient_id,
+  diagnosis
+from admissions
+group by
+  patient_id,
+  diagnosis
+having count(admission_date) > 1
+
+
+/* MEDIUM
+Show the city and the total number of patients in the city.
+Order from most to least patients and then by city name ascending.
+*/
+SELECT
+  city AS City,
+  count(*) AS Total_Patients
+from patients
+group by city
+order by
+  Total_Patients desc,
+  City ASC
+
+
+/* MEDIUM
+Show first name, last name and role of every person that is either patient or doctor.
+The roles are either "Patient" or "Doctor"
+*/
+SELECT
+  first_name,
+  last_name,
+  'Patient' AS Role
+from patients
+union all
+select
+  first_name,
+  last_name,
+  'Doctor'
+from doctors
+
+
+/* MEDIUM
+Show all allergies ordered by popularity. Remove NULL values from query.
+*/
+SELECT
+  allergies,
+  count(*) AS Total
+from patients
+where allergies IS not NULL
+group by allergies
+order by Total desc
+
+
+/* MEDIUM
+Show all patient's first_name, last_name, and birth_date who were born in the 1970s decade. Sort the list starting from the earliest birth_date.
+*/
+select
+  first_name,
+  last_name,
+  birth_date
+from patients
+where
+  year(birth_date) between 1970 AND 1979
+order by birth_date asc
+
+
+/* MEDIUM
+We want to display each patient's full name in a single column. Their last_name in all upper letters must appear first, then first_name in all lower case letters. Separate the last_name and first_name with a comma. Order the list by the first_name in decending order
+EX: SMITH,jane
+*/
+select
+  concat(upper(last_name), ',', lower(first_name))
+from patients
+order by first_name desc
+
 
 
 
