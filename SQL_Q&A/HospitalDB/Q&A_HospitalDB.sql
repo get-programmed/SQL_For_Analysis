@@ -314,7 +314,28 @@ from patients
 order by first_name desc
 
 
+/* MEDIUM
+Show the province_id(s), sum of height; where the total sum of its patient's height is greater than or equal to 7,000.
+*/
+select
+  province_id,
+  sum(height) AS Total_Height
+from patients
+group by province_id
+having Total_Height >= 7000
 
+
+/* MEDIUM
+Show the difference between the largest weight and smallest weight for patients with the last name 'Maroni'
+*/
+select MAX(weight) - min(weight)
+from patients
+where last_name = 'Maroni'
+
+
+/* MEDIUM
+Show all of the days of the month (1-31) and how many admission_dates occurred on that day. Sort by the day with most admissions to least admissions.
+*/
 
 
 
