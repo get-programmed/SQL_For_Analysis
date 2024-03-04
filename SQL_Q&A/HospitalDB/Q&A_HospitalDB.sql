@@ -409,16 +409,81 @@ group by
 
 
 /* MEDIUM
-
+Display the total amount of patients for each province. Order by descending.
 */
+select
+  pn.province_name AS Province_Name,
+  count(p.patient_id) AS Total_Count
+from province_names AS pn
+  JOIN patients AS p on p.province_id = pn.province_id
+group by Province_Name
+order by Total_Count desc
 
 
+/* MEDIUM
+For every admission, display the patient's full name, their admission diagnosis, and their doctor's full name who diagnosed their problem.
+*/
+select
+  concat(p.first_name, ' ', p.last_name) AS Patient_Name,
+  a.diagnosis AS Diagnosi,
+  concat(d.first_name, ' ', d.last_name) AS Doctor_Name
+FROm patients As p
+  join admissions AS a ON p.patient_id = a.patient_id
+  Join doctors AS d ON a.attending_doctor_id = d.doctor_id
 
 
+/* MEDIUM
+display the first name, last name and number of duplicate patients based on their first name and last name.
+
+Ex: A patient with an identical name can be considered a duplicate.
+*/
+select
+  first_name,
+  last_name,
+  count(*) AS Duplicates
+from patients
+group by
+  first_name,
+  last_name
+having Duplicates >= 2
 
 
+/* MEDIUM
+Display patient's full name,
+height in the units feet rounded to 1 decimal,
+weight in the unit pounds rounded to 0 decimals,
+birth_date,
+gender non abbreviated.
+
+Convert CM to feet by dividing by 30.48.
+Convert KG to pounds by multiplying by 2.205.
+*/
+select
+  Concat(first_name, ' ', last_name),
+  round((height / 30.48), 1),
+  round((weight * 2.205), 0),
+  birth_date,
+  (
+    case
+      when gender = 'M' THEN 'MALE'
+      ELSE 'FEMALE'
+    END
+  )
+FROM patients
 
 
+/* MEDIUM
+Show patient_id, first_name, last_name from patients whose does not have any records in the admissions table. (Their patient_id does not exist in any admissions.patient_id rows.)
+*/
+select
+  p.patient_id AS ID,
+  p.first_name AS First_Name,
+  p.last_name AS Last_Name
+from patients AS p
+where ID NOT IN(
+    select a.patient_id AS ID2
+    from admissions AS a
+  )
 
 
 
