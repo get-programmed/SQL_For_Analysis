@@ -486,6 +486,215 @@ where ID NOT IN(
   )
 
 
+/* HARD
+Show all of the patients grouped into weight groups.
+Show the total amount of patients in each weight group.
+Order the list by the weight group decending.
+
+For example, if they weight 100 to 109 they are placed in the 100 weight group, 110-119 = 110 weight group, etc.
+*/
+select
+  count(*) AS Counts,
+  floor(weight / 10) * 10 As Groups
+from patients
+group by Groups
+order by Groups desc
+
+
+/* HARD
+Show patient_id, weight, height, isObese from the patients table.
+
+Display isObese as a boolean 0 or 1.
+
+Obese is defined as weight(kg)/(height(m)2) >= 30.
+
+weight is in units kg.
+
+height is in units cm.
+*/
+select
+  patient_id,
+  weight,
+  height,
+  (
+    case
+      WHEN weight / (power(height / 100.0, 2)) >= 30 THEN 1
+      ELSE 0
+    END
+  ) AS Height
+from patients
+
+
+/*Show patient_id, first_name, last_name, and attending doctor's specialty.
+Show only the patients who has a diagnosis as 'Epilepsy' and the doctor's first name is 'Lisa'
+
+Check patients, admissions, and doctors tables for required information.
+*/
+select
+  p.patient_id,
+  p.first_name,
+  p.last_name,
+  d.specialty
+from patients AS p
+  JOIN admissions AS a ON p.patient_id = a.patient_id
+  JOIN doctors AS d on a.attending_doctor_id = d.doctor_id
+where
+  a.diagnosis = 'Epilepsy'
+  AND d.first_name = 'Lisa'
+
+
+/* HARD
+All patients who have gone through admissions, can see their medical documents on our site. Those patients are given a temporary password after their first admission. Show the patient_id and temp_password.
+
+The password must be the following, in order:
+1. patient_id
+2. the numerical length of patient's last_name
+3. year of patient's birth_date
+*/
+select
+  p.patient_id AS ID,
+  concat(
+    p.patient_id,
+    LEN(p.last_name),
+    year(p.birth_date)
+  ) AS Pass
+from
+  patients AS p,
+  admissions AS a
+where p.patient_id = a.patient_id
+group by ID
+
+
+
+/* HARD
+Each admission costs $50 for patients without insurance, and $10 for patients with insurance. All patients with an even patient_id have insurance.
+
+Give each patient a 'Yes' if they have insurance, and a 'No' if they don't have insurance. Add up the admission_total cost for each has_insurance group.
+*/
+select
+  'No' AS has_Ins,
+  count(*) * 10 AS Cost
+from admissions
+where patient_id % 2 = 0
+UNION
+SELECT
+  'Yes',
+  count(*) * 50
+from admissions
+where patient_id % 2 IS not 0
+
+
+/* HARD
+Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name
+*/
+select pn.province_name AS Province
+from
+  province_names AS pn,
+  patients AS p
+where p.province_id = pn.province_id
+group by province
+HAVING
+  count(
+    case
+      when gender = 'M' THEN 1
+    END
+  ) > count(
+    case
+      when gender = 'F' THEN 1
+    END
+  )
+
+
+/* HARD
+We are looking for a specific patient. Pull all columns for the patient who matches the following criteria:
+- First_name contains an 'r' after the first two letters.
+- Identifies their gender as 'F'
+- Born in February, May, or December
+- Their weight would be between 60kg and 80kg
+- Their patient_id is an odd number
+- They are from the city 'Kingston'
+*/
+select *
+from patients
+where
+  first_name like '__r%'
+  AND gender = 'F'
+  AND month(birth_date) IN (2, 5, 12)
+  AND weight between 60 AND 80
+  AND patient_id % 2 = 1
+  AND city = 'Kingston'
+
+
+/* HARD
+Show the percent of patients that have 'M' as their gender. Round the answer to the nearest hundreth number and in percent form.
+*/
+SELECT
+  CONCAT(
+    ROUND(
+      SUM(gender = 'M') / CAST(COUNT(*) AS float),
+      4
+    ) * 100,
+    '%'
+  ) AS Per_M
+FROM patients;
+
+
+/* HARD
+For each day display the total amount of admissions on that day. Display the amount changed from the previous date.
+*/
+SELECT
+  admission_date AS Add_Date,
+  count(admission_date) AS Total_Add,
+  count(admission_date) - Lag(count(admission_date)) over(
+    order by admission_date
+  ) as Change
+from admissions
+group by Add_Date
+
+
+/* HARD
+Sort the province names in ascending order in such a way that the province 'Ontario' is always on top.
+*/
+SELECT province_name
+from province_names
+order by
+(
+    case
+      when province_name = 'Ontario' THEN 0
+      ELSE 1
+    END
+  ),
+  province_name
+
+
+/* HARD
+We need a breakdown for the total amount of admissions each doctor has started each year. Show the doctor_id, doctor_full_name, specialty, year, total_admissions for that year.
+*/
+SELECT
+  d.doctor_id AS ID,
+  concat(d.first_name, ' ', d.last_name) AS Name,
+  year(a.admission_date) AS Year_,
+  d.specialty AS Specialty,
+  count(*) AS Total_Add
+from
+  doctors AS d,
+  admissions AS a
+where d.doctor_id = a.attending_doctor_id
+group by
+  ID,
+  Name,
+  year_,
+  Specialty
+
+
+
+
+
+
+
+
+
+
 
 
 
