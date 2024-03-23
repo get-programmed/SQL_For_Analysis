@@ -155,3 +155,31 @@ RIGHT JOIN [rsc].[orders] AS rsord ON rsonl.customerid = rsord.customerid
 SELECT *
 FROM [rsc].[onlinecustomers] AS rsonl
 FULL OUTER JOIN [rsc].[orders] AS rsord ON rsonl.customerid = rsord.customerid
+
+--- SQL Self Join
+SELECT * 
+FROM rsc.onlinecustomers AS rsonl1, rsc.onlinecustomers AS rsonl2
+WHERE rsonl1.customerid = rsonl2.customerid
+AND rsonl1.customerid = rsonl2.customerid
+
+--- SQL UNION Operator
+SELECT *
+FROM rsc.onlinecustomers
+WHERE customerid = 1
+UNION
+SELECT *
+FROM rsc.onlinecustomers
+WHERE customerid = 5
+
+--- SQL GROUP BY Statement
+SELECT 
+	ProductName, COUNT(Category) AS Count_Of_Category
+FROM rsc.dummy_sales_data
+GROUP BY ProductName
+
+--- SQL HAVING Clause (The HAVING clause was added to SQL because the WHERE keyword cannot be used with aggregate functions.)
+SELECT 
+	ProductName, COUNT(Category) AS Count_Of_Category
+FROM rsc.dummy_sales_data
+GROUP BY ProductName
+HAVING COUNT(Category) > 2000
