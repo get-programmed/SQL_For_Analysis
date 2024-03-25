@@ -183,3 +183,69 @@ SELECT
 FROM rsc.dummy_sales_data
 GROUP BY ProductName
 HAVING COUNT(Category) > 2000
+
+--- SQL ANY Operators
+SELECT * 
+FROM rsc.onlinecustomers 
+WHERE customerid = ANY (
+	SELECT 
+		customerid 
+	FROM rsc.onlinecustomers
+	WHERE customerid = 4)
+
+
+--- SQL ALL Operators
+SELECT * 
+FROM rsc.onlinecustomers 
+WHERE customerid > ALL (
+	SELECT 
+		customerid 
+	FROM rsc.onlinecustomers
+	WHERE customerid = 5)
+
+--- SQL EXISTS Operators
+SELECT CustomerName, customerid 
+FROM rsc.onlinecustomers
+WHERE EXISTS (
+	SELECT orders.customerid 
+	FROM rsc.orders, rsc.onlinecustomers
+	WHERE onlinecustomers.customerid = orders.customerid)
+
+--- SQL IN Operators
+SELECT CustomerName, customerid 
+FROM rsc.onlinecustomers
+WHERE customerid IN (
+	SELECT orders.customerid 
+	FROM rsc.orders, rsc.onlinecustomers
+	WHERE onlinecustomers.customerid = orders.customerid)
+
+--- SQL NOT IN Operators
+SELECT CustomerName, customerid 
+FROM rsc.onlinecustomers
+WHERE customerid NOT IN (
+	SELECT orders.customerid 
+	FROM rsc.orders, rsc.onlinecustomers
+	WHERE onlinecustomers.customerid = orders.customerid)
+
+--- SQL SELECT INTO Statement
+SELECT 
+	rsonl.customerid, 
+	rsonl.CustomerName INTO Onl_New_Into
+FROM rsc.onlinecustomers AS rsonl
+JOIN rsc.orders AS rsord
+ON rsonl.customerid = rsord.customerid
+GO
+SELECT * FROM Onl_New_Into
+
+--- SQL CASE Expression
+SELECT 
+	Ordertotal, 
+	discountrate,
+	CASE
+		WHEN ordertotal < 350 THEN 'Normal Delivery'
+		WHEN ordertotal > 350 THEN 'Prime Delivery'
+		ELSE NULL
+		END AS 'Delivery Type'
+FROM rsc.orders
+
+
