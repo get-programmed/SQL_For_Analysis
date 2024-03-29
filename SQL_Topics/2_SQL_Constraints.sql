@@ -140,3 +140,113 @@ ADD CONSTRAINT P_Employee PRIMARY KEY (EmployeeID, Mobile_Number); --- Both the 
 --- DROP a PRIMARY KEY Constraint
 ALTER TABLE rsc.Employee
 DROP CONSTRAINT P_Employee;
+
+--- SQL FOREIGN KEY Constraint
+--- SQL FOREIGN KEY on CREATE TABLE
+CREATE TABLE rsc.Employee (
+	EmployeeID INT NOT NULL PRIMARY KEY,
+	FirstName VARCHAR(225) NOT NULL,
+	MiddleName VARCHAR(225),
+	LastName VARCHAR(225) NOT NULL,
+	Age INT,
+	Mobile_Number VARCHAR(10) NOT NULL,
+	DepartmentID INT FOREIGN KEY REFERENCES Department(DepartmentID)
+	);
+
+--- FOREIGN KEY constraint on multiple columns
+CREATE TABLE rsc.Employee (
+    EmployeeID INT NOT NULL PRIMARY KEY,
+    FirstName VARCHAR(225) NOT NULL,
+    MiddleName VARCHAR(225),
+    LastName VARCHAR(225) NOT NULL,
+    AGE INT,
+    Mobile_Number VARCHAR(10) NOT NULL,
+    DepartmentID INT,
+    OfficeLocationID INT,
+    FOREIGN KEY (DepartmentID, OfficeLocationID) REFERENCES rsc.Department(DepartmentID, OfficeLocationID)
+);
+
+--- SQL FOREIGN KEY on ALTER TABLE
+ALTER TABLE rsc.Employee
+ADD CONSTRAINT F_Employee
+FOREIGN KEY DepartmentID REFERENCES Department(DepartmentID);
+
+--- SQL FOREIGN KEY on ALTER TABLE On multiple columns
+ALTER TABLE rsc.Employee
+ADD CONSTRAINT F_Employee
+FOREIGN KEY ( DepartmentID, OfficeLocationID) REFERENCES Department( DepartmentID, OfficeLocationID);
+
+--- DROP a FOREIGN KEY Constraint
+ALTER TABLE rsc.Employee
+DROP CONSTRAINT F_Employee;
+
+--- SQL CHECK Constraint
+CREATE TABLE rsc.Employee (
+	EmployeeID INT NOT NULL PRIMARY KEY,
+	FirstName VARCHAR(225) NOT NULL,
+	MiddleName VARCHAR(225),
+	LastName VARCHAR(225) NOT NULL,
+	AGE INT CHECK (AGE >= 18),
+	Mobile_Number VARCHAR(10)
+);
+
+--- SQL CHECK Constraint on multiple columns
+CREATE TABLE rsc.Employee (
+	EmployeeID INT NOT NULL PRIMARY KEY,
+	FirstName VARCHAR(225) NOT NULL,
+	MiddleName VARCHAR(225),
+	LastName VARCHAR(225) NOT NULL,
+	AGE INT,
+	Mobile_Number VARCHAR(10),
+	CONSTRAINT C_Employee CHECK (AGE >= 18 AND Mobile_Number LIKE '[0-9]%')
+);
+
+--- SQL CHECK on ALTER TABLE
+ALTER TABLE rsc.Employee
+ADD CHECK (Age >= 18);
+
+--- SQL CHECK on ALTER TABLE on multiple columns
+ALTER TABLE rsc.Employee
+ADD CONSTRAINT C_Employee CHECK (Age >= 18 AND Mobile_Number LIKE '[0-9]%');
+
+--- DROP a CHECK Constraint
+ALTER TABLE rsc.Employee
+DROP CONSTRAINT C_Employee;
+
+--- SQL DEFAULT Constraint
+CREATE TABLE rsc.Employee (
+	EmployeeID INT NOT NULL,
+	FirstName VARCHAR(225) NOT NULL,
+	MiddleName VARCHAR(225),
+	LastName VARCHAR(225) NOT NULL,
+	AGE INT,
+	Date_Of_Joining DATE DEFAULT GETDATE()
+);
+
+--- SQL DEFAULT on ALTER TABLE
+ALTER TABLE rsc.Employee
+ADD CONSTRAINT D_employee
+DEFAULT 18 FOR Age;
+
+--- DROP a DEFAULT Constraint
+ALTER TABLE rsc.Employee
+DROP CONSTRAINT D_Employee;
+
+--- SQL CREATE INDEX Statement
+CREATE INDEX N_INDEX 
+ON rsc.Employee (EmployeeID, Mobile_Number);
+
+--- SQL CREATE UNIQUE INDEX Syntax
+CREATE UNIQUE INDEX N_INDEX 
+ON rsc.Employee (EmployeeID, Mobile_Number);
+
+--- DROP INDEX Statement
+DROP INDEX rsc.Employee.N_INDEX;
+
+--- SQL AUTO INCREMENT Field
+CREATE TABLE rsc.Employee (
+	EmployeeID INT IDENTITY(1,1) PRIMARY KEY,
+	FirstName VARCHAR(225) NOT NULL,
+	MiddleName VARCHAR(225),
+	LastName VARCHAR(225) NOT NULL,
+);
