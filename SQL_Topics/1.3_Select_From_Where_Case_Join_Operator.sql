@@ -1,4 +1,4 @@
---- SQL SELECT Statement
+--- SQL SELECT Statement 
 SELECT * FROM rsc.onlinecustomers
 
 SELECT * FROM rsc.orders
