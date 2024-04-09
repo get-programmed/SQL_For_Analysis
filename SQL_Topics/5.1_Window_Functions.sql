@@ -49,3 +49,60 @@ SELECT
 	SUM(order_amount) 
 	OVER ( PARTITION BY city) AS Grand_Total
 FROM rahul_chundawat.orders
+
+--- AVG()
+SELECT 
+	order_id,
+	order_date,
+	customer_name,
+	city,
+	order_amount,
+	AVG(order_amount)
+	OVER ( PARTITION BY city) AS Average_order_amount
+FROM rahul_chundawat.orders;
+
+--- MIN()
+SELECT
+	order_id,
+	order_date,
+	customer_name,
+	city,
+	order_amount,
+	MIN(order_amount)
+	OVER ( PARTITION BY city) AS Minimum_order_amount
+FROM rahul_chundawat.orders;
+
+--- MAX()
+SELECT
+	order_id,
+	order_date,
+	customer_name,
+	city,
+	order_amount,
+	MAX(order_amount)
+	OVER ( PARTITION BY city) AS Minimum_order_amount
+FROM rahul_chundawat.orders;
+
+--- Count()
+SELECT
+	order_id,
+	order_date,
+	customer_name,
+	city,
+	order_amount,
+	COUNT( order_id)
+	OVER ( PARTITION BY city) AS Number_Of_IDs
+FROM rahul_chundawat.orders;
+
+
+--- Ranking Window Functions
+--- RANK()
+SELECT
+	order_id,
+	order_date,
+	customer_name,
+	city,
+	order_amount,
+	RANK() 
+	OVER ( ORDER BY order_amount DESC) [Rank_of_order_amount]
+FROM rahul_chundawat.orders;
