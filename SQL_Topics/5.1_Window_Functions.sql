@@ -1,4 +1,4 @@
---- Window functions
+--- Window functions 
 
 CREATE TABLE rsc.Orders
 (
