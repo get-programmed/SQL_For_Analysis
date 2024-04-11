@@ -43,4 +43,9 @@ FROM (
 ) AS SubqueryAlias
 WHERE rpt = 1;
 
-
+--- SOLUTION_2
+SELECT D1.*
+FROM rsc.Distance AS D1 
+LEFT JOIN rsc.Distance AS D2 
+    ON D1.PointA = D2.PointB AND D2.PointA = D1.PointB
+WHERE D2.PointA IS NULL OR D1.PointA > D2.PointA
