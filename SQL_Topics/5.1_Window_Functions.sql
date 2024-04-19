@@ -1,5 +1,5 @@
 --- Window functions  
-
+ 
 CREATE TABLE rsc.Orders
 (
 	order_id INT,
