@@ -20,8 +20,17 @@ INSERT INTO rsc.emp VALUES (10, 'Rakesh', 300, 7000, 6, 50, '1999-03-30');
 INSERT INTO rsc.emp VALUES (11, 'Mukki', 300, 2000, 6, 50, '1999-03-30');
 
 -- Problem 1 -- Find all the employees who are born between 1991 and 1995
-
 SELECT 
 	DISTINCT emp_name
 FROM rsc.emp
 WHERE YEAR(dob) BETWEEN 1991 AND 1995
+
+-- Problem 2 -- Find the 6th highest salary without window function
+SELECT 
+TOP 1 * 
+FROM (
+	SELECT 
+		TOP 6 *
+	FROM rahul_chundawat.emp
+	ORDER BY salary ASC ) AS Sub 
+ORDER BY salary DESC
