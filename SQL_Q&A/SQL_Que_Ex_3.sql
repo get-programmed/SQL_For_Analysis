@@ -1,4 +1,4 @@
-CREATE TABLE rsc.emp (
+CREATE TABLE rsc.emp ( 
 emp_id INT,
 emp_name VARCHAR(20),
 department_id INT,
