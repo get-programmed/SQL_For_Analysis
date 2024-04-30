@@ -34,3 +34,13 @@ FROM (
 	FROM rahul_chundawat.emp
 	ORDER BY salary ASC ) AS Sub 
 ORDER BY salary DESC
+
+-- Problem 3 -- Find the 3rd highest salary per department
+
+SELECT * FROM (
+    SELECT 
+        *,
+        DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) AS Ranker
+    FROM rsc.emp
+) AS ranked_employees
+WHERE Ranker = 3;
