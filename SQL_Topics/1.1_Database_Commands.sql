@@ -24,9 +24,9 @@ INSERT INTO rsc.Employee (EmployeeID, LastName, FirstName, State, City)
 VALUES (102 , 'Mishra', 'Milind', 'Bihar', 'Jharkhand'),
 (103 , 'Sharma', 'Rishav', 'Maharashtra', 'Mumbai'),
 (104 , NULL , NULL , 'Kerala', 'Trivandrum'),
-(105 , 'Vaibhav', 'Vishal', 'Bhopal', 'Madhya Pradesh'),
-(106 , 'Singh', 'Rahul', 'Gurugram', 'Haryana'),
-(107 , 'Kumar', 'Sonu', 'New Delhi', 'Delhi');
+(105 , 'Vaibhav', 'Vishal', 'Madhya Pradesh', 'Bhopal'),
+(106 , 'Singh', 'Rahul', 'Haryana', 'Gurugram'),
+(107 , 'Kumar', 'Sonu', 'Delhi', 'New Delhi');
 
 --- SQL UPDATE Statement
 UPDATE rsc.Employee
